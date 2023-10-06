@@ -1,12 +1,13 @@
 services:
   postgres:
     image: 'postgres:latest'
+    restart: always
     environment:
-      - 'POSTGRES_DB=mydatabase'
-      - 'POSTGRES_PASSWORD=secret'
-      - 'POSTGRES_USER=myuser'
+      - 'POSTGRES_DB=vacationplanner'
+      - 'POSTGRES_PASSWORD=postgres123'
+      - 'POSTGRES_USER=postgres'
     ports:
-      - '5432'
+      - '5432:5432'
 
   consul-server:
     image: hashicorp/consul:latest
