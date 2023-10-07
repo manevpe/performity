@@ -1,4 +1,4 @@
-package com.vacationplanner.useradmin;
+package com.vacationplanner.useradmin.utils;
 
 import org.hibernate.context.spi.CurrentTenantIdentifierResolver;
 import org.springframework.stereotype.Component;
@@ -8,7 +8,7 @@ import org.hibernate.cfg.AvailableSettings;
 import java.util.Map;
 
 @Component
-class TenantIdentifierResolver implements CurrentTenantIdentifierResolver, HibernatePropertiesCustomizer {
+public class TenantIdentifierResolver implements CurrentTenantIdentifierResolver, HibernatePropertiesCustomizer {
 
     private String currentTenant = "public";
 

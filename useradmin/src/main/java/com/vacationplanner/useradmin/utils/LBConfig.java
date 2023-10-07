@@ -1,4 +1,4 @@
-package com.vacationplanner.useradmin;
+package com.vacationplanner.useradmin.utils;
 
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;

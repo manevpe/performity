@@ -1,4 +1,4 @@
-package com.vacationplanner.useradmin;
+package com.vacationplanner.useradmin.utils;
 
 import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.engine.jdbc.connections.spi.MultiTenantConnectionProvider;
@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.util.Map;
 
 @Component
-class ExampleConnectionProvider implements MultiTenantConnectionProvider, HibernatePropertiesCustomizer {
+public class ExampleConnectionProvider implements MultiTenantConnectionProvider, HibernatePropertiesCustomizer {
 
     @Autowired
     DataSource dataSource;
