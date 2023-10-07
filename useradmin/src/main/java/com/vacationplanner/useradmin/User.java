@@ -16,19 +16,9 @@ import java.util.List;
 @ToString
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String email;
     private String firstName;
     private String lastName;
-    private String email;
     private List<String> teams;
     private float vacationDays;
-
-    public User(String firstName, String lastName, String email, List<String> teams, float vacationDays) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.teams = teams;
-        this.vacationDays = vacationDays;
-    }
 }

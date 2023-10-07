@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class UsersService {
@@ -15,12 +16,17 @@ public class UsersService {
         return usersRepository.findAll();
     }
 
+    public Optional<User> findByEmail(String email) {
+        return usersRepository.findByEmail(email);
+    }
+
     public User createUser(Map<String, Object> user) {
-        // TODO - validation
+        // TODO - validation.
+        // TODO - return 409 on duplicate email
         User newUser = new User(
+                user.get("email").toString(),
                 user.get("firstName").toString(),
                 user.get("lastName").toString(),
-                user.get("email").toString(),
                 (List) user.get("teams"),
                 0
         );
@@ -28,4 +34,16 @@ public class UsersService {
 
         return newUser;
     }
+
+    public User updateByEmail(User newUser) {
+        // TODO - when trying to change email, a new entry is created instead.
+        return usersRepository.save(newUser);
+    }
+
+    public void deleteByEmail(String email) {
+        // TODO - when not found, return an error
+        usersRepository.deleteByEmail(email);
+    }
+
+    // TODO - delete multiple
 }
