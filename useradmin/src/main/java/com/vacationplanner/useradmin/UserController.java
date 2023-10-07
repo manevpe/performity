@@ -23,12 +23,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserByEmail(@PathVariable("id") String email) {
-        Optional<User> userData = usersService.findByEmail(email);
-        if (userData.isPresent()) {
-            return new ResponseEntity<>(userData.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return new ResponseEntity<>(usersService.getUserDetails(email), HttpStatus.OK);
     }
 
     @PostMapping
@@ -38,24 +33,12 @@ public class UserController {
 
     @PutMapping("/{id}")
     public ResponseEntity<User> updateTutorial(@PathVariable("id") String email, @RequestBody User user) {
-        // TODO - move this business logic into the service and handle exceptions here
-        // TODO - generic exception handler for all methods?
-        Optional<User> userData = usersService.findByEmail(email);
-        if (userData.isPresent()) {
-            return new ResponseEntity<>(usersService.updateByEmail(user), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return new ResponseEntity<>(usersService.updateByEmail(email, user), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> deleteUser(@PathVariable("id") String email) {
-        Optional<User> userData = usersService.findByEmail(email);
-        if (userData.isPresent()) {
-            usersService.deleteByEmail(email);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        usersService.deleteByEmail(email);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

@@ -1,7 +1,10 @@
 package com.vacationplanner.useradmin;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.List;
 import java.util.Map;
@@ -16,13 +19,29 @@ public class UsersService {
         return usersRepository.findAll();
     }
 
-    public Optional<User> findByEmail(String email) {
-        return usersRepository.findByEmail(email);
+    public User findByEmail(String email) {
+        User userData = usersRepository.findByEmail(email);
+        return userData;
+    }
+
+    public User getUserDetails(String email) {
+        User userData = findByEmail(email);
+        if (userData == null) {
+            throw new UserNotFoundException();
+        }
+        return userData;
     }
 
     public User createUser(Map<String, Object> user) {
-        // TODO - validation.
-        // TODO - return 409 on duplicate email
+        User existingUser = findByEmail(user.get("email").toString());
+        if (existingUser != null) {
+            throw new UserExistsException();
+        }
+        // TODO - validation of correct email
+        if (!user.containsKey("email") || user.get("email").equals("")) {
+            throw new UserMissingEmailException();
+        }
+
         User newUser = new User(
                 user.get("email").toString(),
                 user.get("firstName").toString(),
@@ -35,15 +54,29 @@ public class UsersService {
         return newUser;
     }
 
-    public User updateByEmail(User newUser) {
-        // TODO - when trying to change email, a new entry is created instead.
+    public User updateByEmail(String email, User newUser) {
+        getUserDetails(email);
+        // When changing email, we need to first delete the old entry
+        // TODO - this is not ideal - what would be a better approach?
+        if (!email.equals(newUser.getEmail())) {
+            deleteByEmail(email);
+        }
         return usersRepository.save(newUser);
     }
 
     public void deleteByEmail(String email) {
-        // TODO - when not found, return an error
+        getUserDetails(email);
         usersRepository.deleteByEmail(email);
     }
 
     // TODO - delete multiple
 }
+
+@ResponseStatus(value=HttpStatus.BAD_REQUEST, reason="Missing email field.")  // 400
+class UserMissingEmailException extends RuntimeException {}
+
+@ResponseStatus(value=HttpStatus.NOT_FOUND, reason="User with that email was not found.")  // 404
+class UserNotFoundException extends RuntimeException {}
+
+@ResponseStatus(value=HttpStatus.CONFLICT, reason="User already exists.")  // 409
+class UserExistsException extends RuntimeException {}
