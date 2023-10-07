@@ -1,0 +1,1 @@
+--INSERT INTO users VALUES ('michael.scott@dundermifflin.com', 'Michael', 'Scott', '', 0);

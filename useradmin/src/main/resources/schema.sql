@@ -1,0 +1,8 @@
+--grant usage on schema public to public;
+--grant create on schema public to public;
+--create schema if not exists dundermifflin;
+--create schema dunder_mifflin;
+--set search_path to dunder_mifflin, public;
+--set schema 'dunder_mifflin';
+--grant usage on schema dunder_mifflin to public;
+--grant create on schema dunder_mifflin to public;

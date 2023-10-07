@@ -15,11 +15,15 @@ public class UsersService {
     @Autowired
     private UsersRepository usersRepository;
 
+    @Autowired
+    private TenantIdentifierResolver currentTenant;
+
     public List<User> allUsers() {
         return usersRepository.findAll();
     }
 
     public User findByEmail(String email) {
+        // currentTenant.setCurrentTenant("<tenant_name>");
         User userData = usersRepository.findByEmail(email);
         return userData;
     }
@@ -63,6 +67,8 @@ public class UsersService {
         }
         return usersRepository.save(newUser);
     }
+
+    // TODO - Patch request
 
     public void deleteByEmail(String email) {
         getUserDetails(email);

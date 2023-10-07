@@ -18,21 +18,17 @@ public class UseradminApplication {
         SpringApplication.run(UseradminApplication.class, args);
     }
 
+    // Consul health check
     @GetMapping("/actuator/health")
     public String getHealth() {
         return "Good";
     }
 
-    @GetMapping
-    public  String hello() {
-        return "Hello World!";
-    }
-
     @Autowired
     private WebClient.Builder webClientBuilder;
 
-    public Mono<String> doOtherStuff() {
-        return webClientBuilder.build().get().uri("http://stores/stores")
-                .retrieve().bodyToMono(String.class);
-    }
+//    public Mono<String> doOtherStuff() {
+//        return webClientBuilder.build().get().uri("http://stores/stores")
+//                .retrieve().bodyToMono(String.class);
+//    }
 }
