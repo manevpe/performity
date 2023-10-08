@@ -1,58 +1,63 @@
-import { Button } from "@mui/material";
+import { Container, IconButton } from "@mui/material";
 import { useEffect } from "react";
-import { DataGrid, GridRowsProp, GridColDef } from '@mui/x-data-grid';
+import { DataGrid, GridRowsProp, GridColDef } from "@mui/x-data-grid";
 import React from "react";
-
-function handleClick() {}
-
-interface UserData {
-  email: string;
-  firstName: string;
-  lastName: string;
-  vacationDays: number;
-  teams: Array<string>;
-}
-
-interface UserDataRow extends UserData {
-  id: number;
-}
+import DeleteIcon from "@mui/icons-material/Delete";
+import UserEdit from "./UserEdit";
+import UserAdminService from "./UseradminService";
 
 const Useradmin = () => {
   const [users, setUsers] = React.useState<GridRowsProp>([]);
-  
+
   useEffect(() => {
-    fetch("/useradmin/v1/users").then((response) => {
-      response.json().then((data) => {
-        console.log(data);
-        const parsedData: Array<UserDataRow> = [];
-        let i = 0;
-        data.forEach((d: UserData) => {
-          parsedData.push({ 'id': i, ...d });
-          i++;
-        })
-        setUsers(parsedData);
-      });
-    });
+    (async () => {
+      const data = await UserAdminService.getAllUsers();
+      setUsers(data);
+    })();
   }, []);
 
   const columns: GridColDef[] = [
-    { field: 'firstName', headerName: 'First Name', width: 150 },
-    { field: 'lastName', headerName: 'Last Name', width: 150 },
-    { field: 'email', headerName: 'Email', width: 150 },
-    { field: 'vacationDays', headerName: 'Vacation Days', width: 150 },
-    { field: 'teams', headerName: 'Teams', width: 150 },
+    {
+      field: "fullName",
+      headerName: "Name",
+      flex: 3,
+      valueGetter: (params) => {
+        return `${params.row.firstName || ""} ${params.row.lastName || ""}`;
+      },
+    },
+    { field: "email", headerName: "Email", flex: 5 },
+    { field: "vacationDays", headerName: "Vacation Days", flex: 3 },
+    { field: "teams", headerName: "Teams", width: 150, flex: 5 },
+    {
+      field: "actions",
+      headerName: "",
+      renderCell: (cell) => (
+        <strong>
+          <UserEdit rowData={cell.row}></UserEdit>
+          <IconButton
+            aria-label="delete"
+            onClick={() => {
+              alert("delete");
+            }}
+          >
+            <DeleteIcon />
+          </IconButton>
+        </strong>
+      ),
+      sortable: false,
+      disableColumnMenu: true,
+    },
+    // align: "center", headerAlign: "center",
   ];
 
   return (
-    <div id="useradmin">
-      This is the useradmin page.
-      <br />
-      <Button variant="contained" onClick={handleClick}>
-        Hello world
-      </Button>
-      <br />
-      <DataGrid rows={users} columns={columns} />
-    </div>
+    <Container>
+      <div id="useradmin">
+        This is the useradmin page.
+        <br />
+        <DataGrid rows={users} columns={columns} disableRowSelectionOnClick />
+      </div>
+    </Container>
   );
 };
 
