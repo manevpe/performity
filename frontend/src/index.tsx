@@ -9,6 +9,21 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
+import type {} from '@mui/x-data-grid/themeAugmentation';
+import { createTheme } from '@mui/material';
+
+const theme = createTheme({
+  components: {
+    MuiDataGrid: {
+      styleOverrides: {
+        root: {
+          //backgroundColor: 'red',
+        },
+      },
+    },
+  },
+});
+
 const rootElement = document.getElementById('root');
 if (!rootElement) throw new Error('Failed to find the root element');
 const root = ReactDOM.createRoot(rootElement);

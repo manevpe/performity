@@ -1,18 +1,33 @@
-import './App.css';
-import Button from '@mui/material/Button';
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-function handleClick() {
-  fetch("/useradmin/v1/users").then((response) => {
-    response.json().then((data) => {
-        console.log(data);
-    });
-  });
-};
+import "./App.css";
+import Root from "./routes/root";
+import ErrorPage from "./routes/error-page";
+import UseradminPage from "./routes/useradmin";
+import HomePage from "./routes/home";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Root></Root>,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        path: "",
+        element: <HomePage />,
+      },
+      {
+        path: "useradmin",
+        element: <UseradminPage />,
+      },
+    ],
+  },
+]);
 
 function App(): JSX.Element {
   return (
     <div className="App">
-      <Button variant="contained" onClick={handleClick}>Hello world</Button>
+      <RouterProvider router={router} />
     </div>
   );
 }
