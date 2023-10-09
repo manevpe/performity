@@ -1,16 +1,17 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import { AuthProvider } from "react-oidc-context";
 
-import '@fontsource/roboto/300.css';
-import '@fontsource/roboto/400.css';
-import '@fontsource/roboto/500.css';
-import '@fontsource/roboto/700.css';
+import "@fontsource/roboto/300.css";
+import "@fontsource/roboto/400.css";
+import "@fontsource/roboto/500.css";
+import "@fontsource/roboto/700.css";
 
-import type {} from '@mui/x-data-grid/themeAugmentation';
-import { createTheme } from '@mui/material';
+import type {} from "@mui/x-data-grid/themeAugmentation";
+import { createTheme } from "@mui/material";
 
 const theme = createTheme({
   components: {
@@ -24,12 +25,21 @@ const theme = createTheme({
   },
 });
 
-const rootElement = document.getElementById('root');
-if (!rootElement) throw new Error('Failed to find the root element');
+// TODO - remove hardcoded values
+const oidcConfig = {
+  authority: "http://localhost:8180/realms/dundermifflin",
+  client_id: "performity",
+  redirect_uri: "http://localhost:3000",
+};
+
+const rootElement = document.getElementById("root");
+if (!rootElement) throw new Error("Failed to find the root element");
 const root = ReactDOM.createRoot(rootElement);
 root.render(
   <React.StrictMode>
-    <App />
+    <AuthProvider {...oidcConfig}>
+      <App />
+    </AuthProvider>
   </React.StrictMode>
 );
 
