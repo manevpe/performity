@@ -17,13 +17,16 @@ export default function AlertCustom() {
   const [alertSeverity, setAlertSeverity] =
     React.useState<AlertColor>("success");
   const [alertMessage, setAlertMessage] = React.useState("");
+  const [alertTimeout, setAlertTimeout] = React.useState(6000);
 
-  EventBus.$on('alert.show', (data) => showAlert(data.detail.severity, data.detail.message));
+  EventBus.$on('alert.show', (data) => showAlert(data.detail.severity, data.detail.message, data.detail.timeout));
 
-  const showAlert = (severity: AlertColor, message: string) => {
+
+  const showAlert = (severity: AlertColor, message: string, timeoutValue: number = 6000) => {
     setAlertSeverity(severity);
     setAlertMessage(message);
     setAlertOpen(true);
+    setAlertTimeout(timeoutValue);
   };
 
   const handleClick = () => {
@@ -42,9 +45,9 @@ export default function AlertCustom() {
 
   return (
     <Stack spacing={2} sx={{ width: "100%" }}>
-      <Snackbar open={alertOpen} autoHideDuration={6000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity={ alertSeverity } sx={{ width: "100%" }}>
-          { alertMessage }
+      <Snackbar key={alertMessage} open={alertOpen} autoHideDuration={alertTimeout} onClose={handleClose}>
+        <Alert onClose={handleClose} severity={alertSeverity} sx={{ width: "100%" }}>
+          {alertMessage}
         </Alert>
       </Snackbar>
     </Stack>
