@@ -52,7 +52,7 @@ export default function Root() {
   // }
 
   if (auth.isAuthenticated) {
-    setTimeout(() => EventBus.$dispatch("alert.show", { message: "Signed in as ", severity: "success" }), 0);
+    setTimeout(() => EventBus.$dispatch("alert.show", { message: "Signed in as " + auth.user?.profile.email, severity: "success" }), 0);
   }
 
   return (

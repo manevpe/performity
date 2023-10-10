@@ -1,8 +1,15 @@
 const AuthService = {
   getJwtToken: () => {
-    const sessionKey = Object.entries(sessionStorage).find(([k,v])=> k.startsWith('oidc.user'))?.toString();
-    if (!sessionKey) return "";
-    return JSON.parse(sessionStorage.getItem(sessionKey) || "");
+    //const [sessionKey, sessionValue] = Object.entries(sessionStorage).find(([k,v])=> k.startsWith('oidc.user'));
+    const sessionKey =
+      "oidc.user:" +
+      process.env.REACT_APP_OAUTH2_SERVER_URL +
+      "/realms/" +
+      process.env.REACT_APP_OAUTH2_REALM +
+      ":" +
+      process.env.REACT_APP_OAUTH2_CLIENT_ID;
+    const sessionValue = sessionStorage.getItem(sessionKey) || "{}";
+    return JSON.parse(sessionValue);
   },
 
   getCsrfToken: () => {

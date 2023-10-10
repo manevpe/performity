@@ -15,6 +15,9 @@ public class UsersService {
     private UsersRepository usersRepository;
 
     @Autowired
+    KeycloakService keycloakService;
+
+    @Autowired
     private TenantIdentifierResolver currentTenant;
 
     public List<User> allUsers() {
@@ -32,6 +35,7 @@ public class UsersService {
         if (userData == null) {
             throw new UserNotFoundException();
         }
+        //List<UserRepresentation> user = keycloakService.getUser(email);
         return userData;
     }
 
@@ -52,6 +56,7 @@ public class UsersService {
                 (List) user.get("teams"),
                 0
         );
+        keycloakService.addUser(newUser);
         usersRepository.save(newUser);
 
         return newUser;
@@ -64,6 +69,7 @@ public class UsersService {
         if (!email.equals(newUser.getEmail())) {
             deleteByEmail(email);
         }
+        keycloakService.updateUser(email, newUser);
         return usersRepository.save(newUser);
     }
 
@@ -72,6 +78,7 @@ public class UsersService {
     public void deleteByEmail(String email) {
         getUserDetails(email);
         usersRepository.deleteByEmail(email);
+        keycloakService.deleteUser(email);
     }
 
     // TODO - delete multiple

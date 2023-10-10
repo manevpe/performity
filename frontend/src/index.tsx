@@ -25,12 +25,16 @@ const theme = createTheme({
   },
 });
 
-// TODO - remove hardcoded values
 const oidcConfig = {
-  authority: "http://localhost:8180/realms/dundermifflin",
-  client_id: "performity",
-  redirect_uri: "http://localhost:3000",
+  authority:
+    process.env.REACT_APP_OAUTH2_SERVER_URL +
+    "/realms/" +
+    process.env.REACT_APP_OAUTH2_REALM || "",
+  client_id: process.env.REACT_APP_OAUTH2_CLIENT_ID || "",
+  redirect_uri: process.env.REACT_APP_OAUTH2_REDIRECT_URI || "",
 };
+
+console.log(oidcConfig);
 
 const rootElement = document.getElementById("root");
 if (!rootElement) throw new Error("Failed to find the root element");
