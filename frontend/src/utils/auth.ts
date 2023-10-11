@@ -17,7 +17,7 @@ const AuthService = {
       /(?:(?:^|.*;\s*)XSRF-TOKEN\s*=\s*([^;]*).*$)|^.*$/,
       "$1"
     );
-    console.log(csrfToken);
+    //console.log(csrfToken);
     return csrfToken;
   },
 };
