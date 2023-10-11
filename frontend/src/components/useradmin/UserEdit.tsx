@@ -34,27 +34,7 @@ export default function UserEditDialog(props: { rowData: IUserData }) {
   );
   const [teamsInput, setTeamsInput] = useState(props.rowData.teams);
 
-  const handleFirstNameChange = (event: { target: { value: any } }) => {
-    setFirstNameInput(event.target.value);
-  };
-
-  const handleLastNameChange = (event: { target: { value: any } }) => {
-    setLastNameInput(event.target.value);
-  };
-
-  const handleEmailChange = (event: { target: { value: any } }) => {
-    setEmailInput(event.target.value);
-  };
-
-  const handleVacationDaysChange = (event: { target: { value: any } }) => {
-    setVacationDaysInput(event.target.value);
-  };
-
-  const handleTeamsChange = (event: { target: { value: any } }) => {
-    setTeamsInput(event.target.value);
-  };
-
-  const handleClickOpen = () => {
+  const handleOpen = () => {
     setOpen(true);
   };
 
@@ -78,10 +58,16 @@ export default function UserEditDialog(props: { rowData: IUserData }) {
       });
       //console.log(response);
       if (!response.ok) {
-        EventBus.$dispatch("alert.show", { message: "ERROR: Updating user failed - " + response.statusText, severity: "error" });
+        EventBus.$dispatch("alert.show", {
+          message: "ERROR: Updating user failed - " + response.statusText,
+          severity: "error",
+        });
       } else {
         setOpen(false);
-        EventBus.$dispatch("alert.show", { message: "SUCCESS: User updated.", severity: "success" });
+        EventBus.$dispatch("alert.show", {
+          message: "SUCCESS: User updated.",
+          severity: "success",
+        });
       }
     })();
   };
@@ -91,7 +77,7 @@ export default function UserEditDialog(props: { rowData: IUserData }) {
       <IconButton
         aria-label="edit"
         onClick={() => {
-          handleClickOpen();
+          handleOpen();
         }}
       >
         <EditIcon />
@@ -121,14 +107,7 @@ export default function UserEditDialog(props: { rowData: IUserData }) {
           </Toolbar>
         </AppBar>
         <Container maxWidth="sm">
-          <Box
-            component="form"
-            // sx={{
-            //   "& > :not(style)": { m: 1, width: "25ch" },
-            // }}
-            noValidate
-            autoComplete="off"
-          >
+          <Box component="form" noValidate autoComplete="off">
             <TextField
               id="outlined-basic"
               label="First Name"
@@ -138,7 +117,9 @@ export default function UserEditDialog(props: { rowData: IUserData }) {
               fullWidth
               margin="normal"
               defaultValue={firstNameInput}
-              onChange={handleFirstNameChange}
+              onChange={(e) => {
+                setFirstNameInput(e.target.value);
+              }}
             />
             <TextField
               id="outlined-basic"
@@ -149,7 +130,9 @@ export default function UserEditDialog(props: { rowData: IUserData }) {
               fullWidth
               margin="normal"
               defaultValue={lastNameInput}
-              onChange={handleLastNameChange}
+              onChange={(e) => {
+                setLastNameInput(e.target.value);
+              }}
             />
             <TextField
               id="outlined-basic"
@@ -160,7 +143,9 @@ export default function UserEditDialog(props: { rowData: IUserData }) {
               fullWidth
               margin="normal"
               defaultValue={emailInput}
-              onChange={handleEmailChange}
+              onChange={(e) => {
+                setEmailInput(e.target.value);
+              }}
             />
             <TextField
               id="outlined-basic"
@@ -171,18 +156,21 @@ export default function UserEditDialog(props: { rowData: IUserData }) {
               fullWidth
               margin="normal"
               defaultValue={vacationDaysInput}
-              onChange={handleVacationDaysChange}
+              onChange={(e) => {
+                setVacationDaysInput(parseInt(e.target.value, 10));
+              }}
             />
             <TextField
               id="outlined-basic"
               label="Teams"
               variant="outlined"
-              required
               type="string"
               fullWidth
               margin="normal"
               defaultValue={teamsInput}
-              onChange={handleTeamsChange}
+              onChange={(e) => {
+                setTeamsInput(e.target.value.split(","));
+              }}
             />
           </Box>
         </Container>
