@@ -7,8 +7,7 @@ import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
-import EditIcon from "@mui/icons-material/Edit";
-import IUserData from "./IUserData";
+import AddIcon from "@mui/icons-material/Add";
 import UserAdminService from "./UseradminService";
 import { useState } from "react";
 import EventBus from "../../utils/event_bus";
@@ -22,80 +21,57 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function UserEditDialog(props: { rowData: IUserData }) {
+export default function UserAddDialog() {
   const [open, setOpen] = React.useState(false);
-  //console.log(props.rowData);
 
-  const [firstNameInput, setFirstNameInput] = useState(props.rowData.firstName);
-  const [lastNameInput, setLastNameInput] = useState(props.rowData.lastName);
-  const [emailInput, setEmailInput] = useState(props.rowData.email);
-  const [vacationDaysInput, setVacationDaysInput] = useState(
-    props.rowData.vacationDays
-  );
-  const [teamsInput, setTeamsInput] = useState(props.rowData.teams);
-
-  const handleFirstNameChange = (event: { target: { value: any } }) => {
-    setFirstNameInput(event.target.value);
-  };
-
-  const handleLastNameChange = (event: { target: { value: any } }) => {
-    setLastNameInput(event.target.value);
-  };
-
-  const handleEmailChange = (event: { target: { value: any } }) => {
-    setEmailInput(event.target.value);
-  };
-
-  const handleVacationDaysChange = (event: { target: { value: any } }) => {
-    setVacationDaysInput(event.target.value);
-  };
-
-  const handleTeamsChange = (event: { target: { value: any } }) => {
-    setTeamsInput(event.target.value);
-  };
+  const [firstNameInput, setFirstNameInput] = useState("");
+  const [lastNameInput, setLastNameInput] = useState("");
+  const [emailInput, setEmailInput] = useState("");
+  const [vacationDaysInput, setVacationDaysInput] = useState(20);
+  const [teamsInput, setTeamsInput] = useState("");
 
   const handleClickOpen = () => {
     setOpen(true);
   };
 
   const handleClose = () => {
-    setFirstNameInput(props.rowData.firstName);
-    setLastNameInput(props.rowData.lastName);
-    setEmailInput(props.rowData.email);
-    setVacationDaysInput(props.rowData.vacationDays);
-    setTeamsInput(props.rowData.teams);
     setOpen(false);
   };
 
   const handleSave = () => {
     (async () => {
-      const response = await UserAdminService.updateUser(props.rowData.email, {
+      const response = await UserAdminService.createUser({
         firstName: firstNameInput,
         lastName: lastNameInput,
         email: emailInput,
         vacationDays: vacationDaysInput,
-        teams: teamsInput,
+        teams: teamsInput.split(","),
       });
       //console.log(response);
       if (!response.ok) {
-        EventBus.$dispatch("alert.show", { message: "ERROR: Updating user failed - " + response.statusText, severity: "error" });
+        EventBus.$dispatch("alert.show", {
+          message: "ERROR: Creating user - " + response.statusText,
+          severity: "error",
+        });
       } else {
         setOpen(false);
-        EventBus.$dispatch("alert.show", { message: "SUCCESS: User updated.", severity: "success" });
+        EventBus.$dispatch("alert.show", {
+          message: "SUCCESS: User created.",
+          severity: "success",
+        });
       }
     })();
   };
 
   return (
     <span>
-      <IconButton
-        aria-label="edit"
-        onClick={() => {
-          handleClickOpen();
-        }}
+      <Button
+        variant="contained"
+        startIcon={<AddIcon />}
+        onClick={handleClickOpen}
       >
-        <EditIcon />
-      </IconButton>
+        Add User
+      </Button>
       <Dialog
         fullScreen
         open={open}
@@ -113,13 +89,14 @@ export default function UserEditDialog(props: { rowData: IUserData }) {
               <CloseIcon />
             </IconButton>
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-              Edit {props.rowData.firstName} {props.rowData.lastName}
+              Add User
             </Typography>
             <Button autoFocus color="inherit" onClick={handleSave}>
               save
             </Button>
           </Toolbar>
         </AppBar>
+        {/* TODO - the form could be extracted into a new class, and reused in UserEdit */}
         <Container maxWidth="sm">
           <Box
             component="form"
@@ -138,7 +115,9 @@ export default function UserEditDialog(props: { rowData: IUserData }) {
               fullWidth
               margin="normal"
               defaultValue={firstNameInput}
-              onChange={handleFirstNameChange}
+              onChange={(e) => {
+                setFirstNameInput(e.target.value);
+              }}
             />
             <TextField
               id="outlined-basic"
@@ -149,7 +128,9 @@ export default function UserEditDialog(props: { rowData: IUserData }) {
               fullWidth
               margin="normal"
               defaultValue={lastNameInput}
-              onChange={handleLastNameChange}
+              onChange={(e) => {
+                setLastNameInput(e.target.value);
+              }}
             />
             <TextField
               id="outlined-basic"
@@ -160,7 +141,9 @@ export default function UserEditDialog(props: { rowData: IUserData }) {
               fullWidth
               margin="normal"
               defaultValue={emailInput}
-              onChange={handleEmailChange}
+              onChange={(e) => {
+                setEmailInput(e.target.value);
+              }}
             />
             <TextField
               id="outlined-basic"
@@ -171,18 +154,21 @@ export default function UserEditDialog(props: { rowData: IUserData }) {
               fullWidth
               margin="normal"
               defaultValue={vacationDaysInput}
-              onChange={handleVacationDaysChange}
+              onChange={(e) => {
+                setVacationDaysInput(parseInt(e.target.value, 10));
+              }}
             />
             <TextField
               id="outlined-basic"
               label="Teams"
               variant="outlined"
-              required
               type="string"
               fullWidth
               margin="normal"
               defaultValue={teamsInput}
-              onChange={handleTeamsChange}
+              onChange={(e) => {
+                setTeamsInput(e.target.value);
+              }}
             />
           </Box>
         </Container>

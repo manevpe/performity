@@ -4,7 +4,9 @@ import { DataGrid, GridRowsProp, GridColDef } from "@mui/x-data-grid";
 import React from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import UserEdit from "./UserEdit";
+import UserAdd from "./UserAdd";
 import UserAdminService from "./UseradminService";
+import UserDelete from "./UserDelete";
 
 const Useradmin = () => {
   const [users, setUsers] = React.useState<GridRowsProp>([]);
@@ -34,14 +36,7 @@ const Useradmin = () => {
       renderCell: (cell) => (
         <strong>
           <UserEdit rowData={cell.row}></UserEdit>
-          <IconButton
-            aria-label="delete"
-            onClick={() => {
-              alert("delete");
-            }}
-          >
-            <DeleteIcon />
-          </IconButton>
+          <UserDelete email={cell.row.email}></UserDelete>
         </strong>
       ),
       sortable: false,
@@ -50,11 +45,18 @@ const Useradmin = () => {
     // align: "center", headerAlign: "center",
   ];
 
+  const [deleteModalOpen, setdeleteModalOpen] = React.useState(false);
+
+  const handleDeleteModalClose = () => {
+    setdeleteModalOpen(false);
+  };
+
   return (
     <Container>
       <div id="useradmin">
         This is the useradmin page.
         <br />
+        <UserAdd></UserAdd>
         <DataGrid rows={users} columns={columns} disableRowSelectionOnClick />
       </div>
     </Container>

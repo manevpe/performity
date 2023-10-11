@@ -38,6 +38,19 @@ const UserAdminService = {
     });
   },
 
+  createUser: async (userData: UserAdminServiceProps) => {
+    const jwtToken = AuthService.getJwtToken().access_token;
+    const response = await fetch("/useradmin/v1/users", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: 'Bearer ' + jwtToken
+      },
+      body: JSON.stringify(userData),
+    });
+    return response;
+  },
+
   updateUser: async (email: string, userData: UserAdminServiceProps) => {
     const jwtToken = AuthService.getJwtToken().access_token;
     const response = await fetch("/useradmin/v1/users/" + email, {
