@@ -1,6 +1,5 @@
 const AuthService = {
   getJwtToken: () => {
-    //const [sessionKey, sessionValue] = Object.entries(sessionStorage).find(([k,v])=> k.startsWith('oidc.user'));
     const sessionKey =
       "oidc.user:" +
       process.env.REACT_APP_OAUTH2_SERVER_URL +

@@ -1,6 +1,7 @@
 package com.performity.apigateway;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
@@ -13,11 +14,13 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 @EnableReactiveMethodSecurity
 @RequiredArgsConstructor
 public class CustomSecurityConfig {
+    @Value("${spring.security.oauth2.resourceserver.jwt.jwk-set-uri}")
+    private String jwkSetUri;
+
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         http
             .csrf(ServerHttpSecurity.CsrfSpec::disable)
-            //.antMatchers("/index.html", "/**.js", "/**.css", "/").permitAll()
             .authorizeExchange(
                     authorizeExchangeSpec -> authorizeExchangeSpec.anyExchange()
                             .authenticated())
@@ -25,14 +28,11 @@ public class CustomSecurityConfig {
                 oauth2ResourceServer
                     .jwt((jwt) ->
                         jwt
-                            // TODO - remove hardcoded value
-                            .jwkSetUri("http://localhost:8180/realms/dundermifflin/protocol/openid-connect/certs")
+                            .jwkSetUri(jwkSetUri)
                     )
             );
 
-        //.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
-        //.addFilterAfter(createPolicyEnforcerFilter(), BearerTokenAuthenticationFilter.class);
-
         return http.build();
     }
+
 }

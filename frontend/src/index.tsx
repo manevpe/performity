@@ -34,8 +34,6 @@ const oidcConfig = {
   redirect_uri: process.env.REACT_APP_OAUTH2_REDIRECT_URI || "",
 };
 
-console.log(oidcConfig);
-
 const rootElement = document.getElementById("root");
 if (!rootElement) throw new Error("Failed to find the root element");
 const root = ReactDOM.createRoot(rootElement);
