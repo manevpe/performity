@@ -28,3 +28,10 @@ output.elasticsearch:
   password: ${ELASTIC_PASSWORD}
   ssl.enabled: true
   ssl.certificate_authorities: "certs/ca/ca.crt"
+  indices:
+    - index: "warning-%{[agent.version]}-%{+yyyy.MM.dd}"
+      when.contains:
+        message: "WARN"
+    - index: "error-%{[agent.version]}-%{+yyyy.MM.dd}"
+      when.contains:
+        message: "ERROR"
