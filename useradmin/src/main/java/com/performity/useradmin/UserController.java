@@ -46,7 +46,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(HttpServletRequest request, @PathVariable("id") String email, String payload) throws AccessDeniedException, JsonProcessingException {
+    public ResponseEntity<User> updateUser(HttpServletRequest request, @RequestBody String payload, @PathVariable("id") String email) throws AccessDeniedException, JsonProcessingException {
         checkAdminPermission(request.getHeader("userRoles"));
         JsonSchemaValidator.validate("model/user.schema.json", payload);
         return new ResponseEntity<>(usersService.updateByEmail(email, payload), HttpStatus.OK);
