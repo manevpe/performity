@@ -3,6 +3,8 @@ package com.performity.useradmin;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.performity.useradmin.utils.JsonSchemaValidator;
 import jakarta.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,8 @@ public class UserController {
 
     @Autowired
     private UsersService usersService;
+
+    private static Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers(HttpServletRequest request) throws AccessDeniedException {

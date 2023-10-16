@@ -9,11 +9,15 @@ import com.networknt.schema.JsonSchemaFactory;
 import com.networknt.schema.SpecVersion;
 import com.networknt.schema.ValidationMessage;
 import com.performity.useradmin.UserController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
 import java.util.Set;
 
 public class JsonSchemaValidator {
+    private static Logger LOGGER = LoggerFactory.getLogger(JsonSchemaValidator.class);
+
     public static void validate(String jsonSchema, String requestStr) throws JsonProcessingException, InvalidRequestDataException {
         ObjectMapper om = new ObjectMapper();
         om.setPropertyNamingStrategy(PropertyNamingStrategy.KEBAB_CASE);
@@ -24,9 +28,7 @@ public class JsonSchemaValidator {
         Set<ValidationMessage> errors = schema.validate(jsonNode);
         String errorsCombined = "";
         for (ValidationMessage error : errors) {
-            //log.error("Validation Error: {}", error);
-            System.out.println("Validation Error: ");
-            System.out.println(error);
+            LOGGER.error("Validation Error: {}", error);
             errorsCombined += error.toString() + "\n";
         }
 

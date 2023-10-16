@@ -2,6 +2,8 @@ package com.performity.apigateway;
 
 import io.jsonwebtoken.*;
 import org.apache.commons.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +16,8 @@ import java.util.Date;
 
 @Component
 public class JwtUtil {
+
+    private static Logger LOGGER = LoggerFactory.getLogger(JwtUtil.class);
 
     // TODO - get value from API call
     @Value("${jwt.public-key}")
@@ -46,19 +50,19 @@ public class JwtUtil {
             Jwts.parser().setSigningKey(generateJwtKeyDecryption(jwtPublicKey)).build().parseClaimsJws(authToken);
             return true;
         } catch (SignatureException e) {
-            System.out.println("Invalid JWT signature: {}"+ e.getMessage());
+            LOGGER.error("Invalid JWT signature: {}"+ e.getMessage());
         } catch (MalformedJwtException e) {
-            System.out.println("Invalid JWT token: {}"+ e.getMessage());
+            LOGGER.error("Invalid JWT token: {}"+ e.getMessage());
         } catch (ExpiredJwtException e) {
-            System.out.println("JWT token is expired: {}"+ e.getMessage());
+            LOGGER.error("JWT token is expired: {}"+ e.getMessage());
         } catch (UnsupportedJwtException e) {
-            System.out.println("JWT token is unsupported: {}"+ e.getMessage());
+            LOGGER.error("JWT token is unsupported: {}"+ e.getMessage());
         } catch (IllegalArgumentException e) {
-            System.out.println("JWT claims string is empty: {}"+ e.getMessage());
+            LOGGER.error("JWT claims string is empty: {}"+ e.getMessage());
         } catch (NoSuchAlgorithmException e) {
-            System.out.println("no such algorithm exception");
+            LOGGER.error("JWT no such algorithm exception: {}"+ e.getMessage());
         } catch (InvalidKeySpecException e) {
-            System.out.println("invalid key exception");
+            LOGGER.error("JWT Invalid key exception: {}"+ e.getMessage());
         }
 
         return false;
