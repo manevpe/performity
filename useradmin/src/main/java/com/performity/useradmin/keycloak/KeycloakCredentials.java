@@ -1,4 +1,4 @@
-package com.performity.useradmin;
+package com.performity.useradmin.keycloak;
 
 import org.keycloak.representations.idm.CredentialRepresentation;
 

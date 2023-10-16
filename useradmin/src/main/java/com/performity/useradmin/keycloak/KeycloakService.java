@@ -1,5 +1,6 @@
-package com.performity.useradmin;
+package com.performity.useradmin.keycloak;
 
+import com.performity.useradmin.User;
 import lombok.AllArgsConstructor;
 import org.jboss.resteasy.client.jaxrs.internal.ResteasyClientBuilderImpl;
 import org.keycloak.admin.client.Keycloak;

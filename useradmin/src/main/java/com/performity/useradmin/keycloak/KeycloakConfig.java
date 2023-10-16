@@ -1,4 +1,4 @@
-package com.performity.useradmin;
+package com.performity.useradmin.keycloak;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

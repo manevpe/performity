@@ -1,5 +1,7 @@
 package com.performity.useradmin;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.performity.useradmin.utils.JsonSchemaValidator;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import java.nio.file.AccessDeniedException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/useradmin/v1/users")
@@ -34,15 +35,17 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<User> createUser(HttpServletRequest request, @RequestBody Map<String, Object> payload) throws AccessDeniedException {
+    public ResponseEntity<User> createUser(HttpServletRequest request, @RequestBody String payload) throws AccessDeniedException, JsonProcessingException {
         checkAdminPermission(request.getHeader("userRoles"));
+        JsonSchemaValidator.validate("model/user.schema.json", payload);
         return new ResponseEntity<User>(usersService.createUser(payload), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(HttpServletRequest request, @PathVariable("id") String email, @RequestBody User user) throws AccessDeniedException {
+    public ResponseEntity<User> updateUser(HttpServletRequest request, @PathVariable("id") String email, String payload) throws AccessDeniedException, JsonProcessingException {
         checkAdminPermission(request.getHeader("userRoles"));
-        return new ResponseEntity<>(usersService.updateByEmail(email, user), HttpStatus.OK);
+        JsonSchemaValidator.validate("model/user.schema.json", payload);
+        return new ResponseEntity<>(usersService.updateByEmail(email, payload), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
