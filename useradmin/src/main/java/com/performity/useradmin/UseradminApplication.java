@@ -20,11 +20,4 @@ public class UseradminApplication {
         return "Good";
     }
 
-//    @Autowired
-//    private WebClient.Builder webClientBuilder;
-
-//    public Mono<String> doOtherStuff() {
-//        return webClientBuilder.build().get().uri("http://stores/stores")
-//                .retrieve().bodyToMono(String.class);
-//    }
 }
