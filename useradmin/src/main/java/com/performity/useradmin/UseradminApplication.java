@@ -1,5 +1,6 @@
 package com.performity.useradmin;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +15,7 @@ public class UseradminApplication {
         SpringApplication.run(UseradminApplication.class, args);
     }
 
+    @Hidden
     // Consul health check
     @GetMapping("/actuator/health")
     public String getHealth() {

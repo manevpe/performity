@@ -59,6 +59,7 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-zipkin:2.2.8.RELEASE'
     implementation 'io.zipkin.reporter2:zipkin-reporter-brave:2.16.4'
     implementation 'io.micrometer:micrometer-tracing-bridge-brave:1.1.6'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
     compileOnly 'org.projectlombok:lombok:1.18.30'
     developmentOnly 'org.springframework.boot:spring-boot-devtools:3.1.4'
     developmentOnly 'org.springframework.boot:spring-boot-docker-compose:3.1.4'
