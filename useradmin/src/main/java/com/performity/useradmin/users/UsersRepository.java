@@ -1,4 +1,4 @@
-package com.performity.useradmin;
+package com.performity.useradmin.users;
 
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;

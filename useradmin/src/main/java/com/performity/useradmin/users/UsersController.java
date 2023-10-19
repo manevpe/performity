@@ -1,7 +1,9 @@
-package com.performity.useradmin;
+package com.performity.useradmin.users;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.performity.useradmin.utils.AccessDeniedException;
+import com.performity.useradmin.utils.AuthorizationHelper;
 import com.performity.useradmin.utils.JsonSchemaValidator;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -19,17 +21,22 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.List;
 
 @RestController
 @RequestMapping("/useradmin/v1/users")
-public class UserController {
+public class UsersController {
 
     @Autowired
     private UsersService usersService;
 
-    private static Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+    @Autowired
+    private AuthorizationHelper authorizationHelper;
+
+    @Autowired
+    private JsonSchemaValidator jsonSchemaValidator;
+
+    private static Logger LOGGER = LoggerFactory.getLogger(UsersController.class);
 
     @GetMapping
     @Operation(
@@ -48,7 +55,7 @@ public class UserController {
             )
     )
     public ResponseEntity<List<User>> getAllUsers(HttpServletRequest request) throws AccessDeniedException {
-        checkAdminPermission(request.getHeader("userRoles"));
+        authorizationHelper.checkAdminPermission(request.getHeader("userRoles"));
         return new ResponseEntity<List<User>>(usersService.allUsers(), HttpStatus.OK);
     }
 
@@ -89,7 +96,7 @@ public class UserController {
     public ResponseEntity<User> getUserByEmail(HttpServletRequest request, @PathVariable("id") String email) throws AccessDeniedException {
         // Allow user to read their own data, but only admins get read other users data.
         if (!email.equals(request.getHeader("userEmail"))) {
-            checkAdminPermission(request.getHeader("userRoles"));
+            authorizationHelper.checkAdminPermission(request.getHeader("userRoles"));
         }
         return new ResponseEntity<>(usersService.getUserDetails(email), HttpStatus.OK);
     }
@@ -123,9 +130,11 @@ public class UserController {
             }
     )
     public ResponseEntity<User> createUser(HttpServletRequest request, @RequestBody String payload) throws AccessDeniedException, JsonProcessingException {
-        checkAdminPermission(request.getHeader("userRoles"));
-        JsonSchemaValidator.validate("model/user.schema.json", payload);
-        return new ResponseEntity<User>(usersService.createUser(payload), HttpStatus.CREATED);
+        authorizationHelper.checkAdminPermission(request.getHeader("userRoles"));
+        jsonSchemaValidator.validate("model/user.schema.json", payload);
+        ObjectMapper objectMapper = new ObjectMapper();
+        User newUser = objectMapper.readValue(payload, User.class);
+        return new ResponseEntity<User>(usersService.createUser(newUser), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
@@ -165,9 +174,11 @@ public class UserController {
             }
     )
     public ResponseEntity<User> updateUser(HttpServletRequest request, @RequestBody String payload, @PathVariable("id") String email) throws AccessDeniedException, JsonProcessingException {
-        checkAdminPermission(request.getHeader("userRoles"));
-        JsonSchemaValidator.validate("model/user.schema.json", payload);
-        return new ResponseEntity<>(usersService.updateByEmail(email, payload), HttpStatus.OK);
+        authorizationHelper.checkAdminPermission(request.getHeader("userRoles"));
+        jsonSchemaValidator.validate("model/user.schema.json", payload);
+        ObjectMapper objectMapper = new ObjectMapper();
+        User newUser = objectMapper.readValue(payload, User.class);
+        return new ResponseEntity<>(usersService.updateByEmail(email, newUser), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
@@ -195,20 +206,9 @@ public class UserController {
             }
     )
     public ResponseEntity<HttpStatus> deleteUser(HttpServletRequest request, @PathVariable("id") String email) throws AccessDeniedException {
-        checkAdminPermission(request.getHeader("userRoles"));
+        authorizationHelper.checkAdminPermission(request.getHeader("userRoles"));
         usersService.deleteByEmail(email);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    private boolean checkAdminPermission(String roles) throws AccessDeniedException {
-        if (roles == null) {
-            throw new AccessDeniedException("Access denied");
-        }
-        String[] userRoles = roles.split(", ");
-        boolean isAdmin = Arrays.stream(userRoles).anyMatch(x -> "Admin".equals(x));
-        if (!isAdmin) {
-            throw new AccessDeniedException("Access denied");
-        }
-        return true;
-    }
 }

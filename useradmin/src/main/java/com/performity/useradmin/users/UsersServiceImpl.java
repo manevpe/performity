@@ -1,7 +1,5 @@
-package com.performity.useradmin;
+package com.performity.useradmin.users;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.performity.useradmin.keycloak.KeycloakService;
 import com.performity.useradmin.utils.TenantIdentifierResolver;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import java.util.List;
 
 @Service
-public class UsersService {
+public class UsersServiceImpl implements UsersService {
     @Autowired
     private UsersRepository usersRepository;
 
@@ -26,7 +24,7 @@ public class UsersService {
         return usersRepository.findAll();
     }
 
-    public User findByEmail(String email) {
+    private User findByEmail(String email) {
         // currentTenant.setCurrentTenant("<tenant_name>");
         User userData = usersRepository.findByEmail(email);
         return userData;
@@ -37,13 +35,10 @@ public class UsersService {
         if (userData == null) {
             throw new UserNotFoundException();
         }
-        //List<UserRepresentation> user = keycloakService.getUser(email);
         return userData;
     }
 
-    public User createUser(String payload) throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        User newUser = objectMapper.readValue(payload, User.class);
+    public User createUser(User newUser) {
         User existingUser = findByEmail(newUser.getEmail().toString());
         if (existingUser != null) {
             throw new UserExistsException();
@@ -55,9 +50,7 @@ public class UsersService {
         return newUser;
     }
 
-    public User updateByEmail(String email, String payload) throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        User newUser = objectMapper.readValue(payload, User.class);
+    public User updateByEmail(String email, User newUser) {
         getUserDetails(email);
         // When changing email, we need to first delete the old entry
         // TODO - this is not ideal - what would be a better approach?
