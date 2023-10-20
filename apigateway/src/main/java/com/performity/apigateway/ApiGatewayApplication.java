@@ -8,13 +8,13 @@ import org.springframework.web.bind.annotation.RestController;
 @SpringBootApplication
 @RestController
 public class ApiGatewayApplication {
-	@GetMapping("/actuator/health")
-	public String getHealth() {
-		return "Good";
-	}
+  public static void main(String[] args) {
+    SpringApplication.run(ApiGatewayApplication.class, args);
+  }
 
-	public static void main(String[] args) {
-		SpringApplication.run(ApiGatewayApplication.class, args);
-	}
+  @GetMapping("/actuator/health")
+  public String getHealth() {
+    return "Good";
+  }
 
 }

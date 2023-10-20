@@ -1,6 +1,7 @@
 package com.performity.useradmin.keycloak;
 
 import com.performity.useradmin.users.User;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import org.jboss.resteasy.client.jaxrs.internal.ResteasyClientBuilderImpl;
 import org.keycloak.admin.client.Keycloak;
@@ -10,96 +11,91 @@ import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.List;
-
 @AllArgsConstructor
 @Service
 public class KeycloakService {
 
-    static Keycloak keycloak = null;
+  static Keycloak keycloak = null;
+  @Autowired
+  static KeycloakConfig keycloakConfig;
 
-    public void addUser(User user) {
-//        CredentialRepresentation credential = KeycloakCredentials
-//                .createPasswordCredentials(user.getPassword());
-        UserRepresentation userRepresentation = new UserRepresentation();
-        userRepresentation.setUsername(user.getEmail());
-        userRepresentation.setFirstName(user.getFirstName());
-        userRepresentation.setLastName(user.getLastName());
-        userRepresentation.setEmail(user.getEmail());
-        //userRepresentation.setCredentials(Collections.singletonList(credential));
-        userRepresentation.setEnabled(true);
+  private static void buildInstance() {
+    keycloak = KeycloakBuilder.builder()
+        .serverUrl(keycloakConfig.getServerUrl())
+        // TODO - allow user to select a particular domain
+        // realm(.keycloakConfig.getRealm())
+        .realm("master")
+        //.grantType(OAuth2Constants.PASSWORD)
+        //.grantType(OAuth2Constants.CLIENT_CREDENTIALS)
+        .username(keycloakConfig.getUserName())
+        .password(keycloakConfig.getPassword())
+        .clientId(keycloakConfig.getClientId())
+        .clientSecret(keycloakConfig.getClientSecret())
+        .resteasyClient(new ResteasyClientBuilderImpl()
+            .connectionPoolSize(10)
+            .build()
+        )
+        .build();
+  }
 
-        UsersResource instance = getInstance();
-        instance.create(userRepresentation);
-    }
+  public void addUser(User user) {
+    //CredentialRepresentation credential = KeycloakCredentials
+    //    .createPasswordCredentials(user.getPassword());
+    UserRepresentation userRepresentation = new UserRepresentation();
+    userRepresentation.setUsername(user.getEmail());
+    userRepresentation.setFirstName(user.getFirstName());
+    userRepresentation.setLastName(user.getLastName());
+    userRepresentation.setEmail(user.getEmail());
+    //userRepresentation.setCredentials(Collections.singletonList(credential));
+    userRepresentation.setEnabled(true);
 
-    public UserRepresentation getUser(String email) {
-        UsersResource usersResource = getInstance();
-        List<UserRepresentation> user = usersResource.searchByEmail(email, true);
-        return user.get(0);
-    }
+    UsersResource instance = getInstance();
+    instance.create(userRepresentation);
+  }
 
-    public void updateUser(String email, User user) {
-//        CredentialRepresentation credential = KeycloakCredentials
-//                .createPasswordCredentials(user.getPassword());
-        UserRepresentation userRepresentation = new UserRepresentation();
-        userRepresentation.setUsername(user.getEmail());
-        userRepresentation.setFirstName(user.getFirstName());
-        userRepresentation.setLastName(user.getLastName());
-        userRepresentation.setEmail(user.getEmail());
-//        userRepresentation.setCredentials(Collections.singletonList(credential));
+  public UserRepresentation getUser(String email) {
+    UsersResource usersResource = getInstance();
+    List<UserRepresentation> user = usersResource.searchByEmail(email, true);
+    return user.get(0);
+  }
 
-        String userId = getUser(email).getId();
-        UsersResource usersResource = getInstance();
-        usersResource.get(userId).update(userRepresentation);
-    }
+  public void updateUser(String email, User user) {
+    //CredentialRepresentation credential = KeycloakCredentials
+    //    .createPasswordCredentials(user.getPassword());
+    UserRepresentation userRepresentation = new UserRepresentation();
+    userRepresentation.setUsername(user.getEmail());
+    userRepresentation.setFirstName(user.getFirstName());
+    userRepresentation.setLastName(user.getLastName());
+    userRepresentation.setEmail(user.getEmail());
+    //userRepresentation.setCredentials(Collections.singletonList(credential));
 
-    public void deleteUser(String email) {
-        String userId = getUser(email).getId();
-        UsersResource usersResource = getInstance();
-        usersResource.get(userId).remove();
-    }
+    String userId = getUser(email).getId();
+    UsersResource usersResource = getInstance();
+    usersResource.get(userId).update(userRepresentation);
+  }
 
+  public void deleteUser(String email) {
+    String userId = getUser(email).getId();
+    UsersResource usersResource = getInstance();
+    usersResource.get(userId).remove();
+  }
 
-    public void sendVerificationLink(String email) {
-        String userId = getUser(email).getId();
-        UsersResource usersResource = getInstance();
-        usersResource.get(userId).sendVerifyEmail();
-    }
+  public void sendVerificationLink(String email) {
+    String userId = getUser(email).getId();
+    UsersResource usersResource = getInstance();
+    usersResource.get(userId).sendVerifyEmail();
+  }
 
-    public void sendResetPassword(String email) {
-        String userId = getUser(email).getId();
-        UsersResource usersResource = getInstance();
-        usersResource.get(userId)
-                .executeActionsEmail(Arrays.asList("UPDATE_PASSWORD"));
-    }
+  public void sendResetPassword(String email) {
+    String userId = getUser(email).getId();
+    UsersResource usersResource = getInstance();
+    usersResource.get(userId)
+        .executeActionsEmail(List.of("UPDATE_PASSWORD"));
+  }
 
-    @Autowired
-    KeycloakConfig keycloakConfig;
-
-    private void buildInstance() {
-        keycloak = KeycloakBuilder.builder()
-                .serverUrl(keycloakConfig.getServerUrl())
-                // TODO - allow user to select a particular domain
-                // realm(.keycloakConfig.getRealm())
-                .realm("master")
-                //.grantType(OAuth2Constants.PASSWORD)
-                //.grantType(OAuth2Constants.CLIENT_CREDENTIALS)
-                .username(keycloakConfig.getUserName())
-                .password(keycloakConfig.getPassword())
-                .clientId(keycloakConfig.getClientId())
-                .clientSecret(keycloakConfig.getClientSecret())
-                .resteasyClient(new ResteasyClientBuilderImpl()
-                        .connectionPoolSize(10)
-                        .build()
-                )
-                .build();
-    }
-
-    public UsersResource getInstance() {
-        buildInstance();
-        return keycloak.realm(keycloakConfig.getRealm()).users();
-    }
+  public UsersResource getInstance() {
+    buildInstance();
+    return keycloak.realm(keycloakConfig.getRealm()).users();
+  }
 
 }

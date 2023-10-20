@@ -1,9 +1,9 @@
 Microservices:
-FE - React (TS) / Material-UI / Redux?
++ FE - React (TS) / Material-UI / Redux?
 + API Gateway / Auth - Java & Spring Boot & Spring Security & Spring Cloud
 + Useradmin Service - Java & Spring Boot
 - Vacation Planner / PTO Service - Java & Spring Boot
-- Reporting Service - Python
+- Reporting Service - Python?
 - Task Scheduler - Java Quartz
 - Notification (Email) Service? - Amazon SES?
 - Question / Suggestion Board
@@ -18,6 +18,8 @@ FE - React (TS) / Material-UI / Redux?
 - Employee engagement
 - Invoicing & Payments - invoiceplane / invoiceninja
 - Onboarding
+- Org Maturity
+
 
 3rd Parties:
 + DB - Postgres

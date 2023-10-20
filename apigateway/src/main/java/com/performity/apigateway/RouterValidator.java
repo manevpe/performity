@@ -1,21 +1,20 @@
 package com.performity.apigateway;
 
-import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.stereotype.Component;
-
 import java.util.List;
 import java.util.function.Predicate;
+import lombok.experimental.UtilityClass;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 
-@Component
+@UtilityClass
 public class RouterValidator {
 
-    public static final List<String> openApiEndpoints = List.of(
-            "/actuator/health"
-    );
+  public static final List<String> openApiEndpoints = List.of(
+      "/actuator/health"
+  );
 
-    public Predicate<ServerHttpRequest> isSecured =
-            request -> openApiEndpoints
-                    .stream()
-                    .noneMatch(uri -> request.getURI().getPath().contains(uri));
+  public static final Predicate<ServerHttpRequest> isSecured =
+      request -> openApiEndpoints
+          .stream()
+          .noneMatch(uri -> request.getURI().getPath().contains(uri));
 
 }

@@ -1,6 +1,7 @@
 # Getting Started
 
 ### Reference Documentation
+
 For further reference, please consider the following sections:
 
 * [Official Gradle documentation](https://docs.gradle.org)
@@ -18,6 +19,7 @@ For further reference, please consider the following sections:
 * [Testcontainers](https://java.testcontainers.org/)
 
 ### Guides
+
 The following guides illustrate how to use some features concretely:
 
 * [Securing a Web Application](https://spring.io/guides/gs/securing-web/)
@@ -29,11 +31,13 @@ The following guides illustrate how to use some features concretely:
 * [Accessing Data with JPA](https://spring.io/guides/gs/accessing-data-jpa/)
 
 ### Additional Links
+
 These additional references should also help you:
 
 * [Gradle Build Scans – insights for your project's build](https://scans.gradle.com#gradle)
 
 ### Docker Compose support
+
 This project contains a Docker Compose file named `compose.yaml`.
 In this file, the following services have been defined:
 

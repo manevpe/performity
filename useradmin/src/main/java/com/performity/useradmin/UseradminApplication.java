@@ -11,15 +11,15 @@ import org.springframework.web.bind.annotation.RestController;
 //@EnableDiscoveryClient
 public class UseradminApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(UseradminApplication.class, args);
-    }
+  public static void main(String[] args) {
+    SpringApplication.run(UseradminApplication.class, args);
+  }
 
-    @Hidden
-    // Consul health check
-    @GetMapping("/actuator/health")
-    public String getHealth() {
-        return "Good";
-    }
+  // Consul health check
+  @Hidden
+  @GetMapping("/actuator/health")
+  public String getHealth() {
+    return "Good";
+  }
 
 }

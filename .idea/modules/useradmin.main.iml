@@ -5,4 +5,10 @@
       <sourceFolder url="file://$MODULE_DIR$/../../useradmin/build/generated/sources/annotationProcessor/java/main" isTestSource="false" generated="true" />
     </content>
   </component>
+  <component name="CheckStyle-IDEA-Module" serialisationVersion="2">
+    <option name="activeLocationsIds" />
+  </component>
+  <component name="SonarLintModuleSettings">
+    <option name="uniqueId" value="d63aa711-56b5-4f6b-908b-9916a9228c64" />
+  </component>
 </module>

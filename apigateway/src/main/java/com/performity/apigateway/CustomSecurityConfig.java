@@ -14,25 +14,25 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 @EnableReactiveMethodSecurity
 @RequiredArgsConstructor
 public class CustomSecurityConfig {
-    @Value("${spring.security.oauth2.resourceserver.jwt.jwk-set-uri}")
-    private String jwkSetUri;
+  @Value("${spring.security.oauth2.resourceserver.jwt.jwk-set-uri}")
+  private String jwkSetUri;
 
-    @Bean
-    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
-        http
-            .csrf(ServerHttpSecurity.CsrfSpec::disable)
-            .authorizeExchange(
-                    authorizeExchangeSpec -> authorizeExchangeSpec.anyExchange()
-                            .authenticated())
-            .oauth2ResourceServer((oauth2ResourceServer) ->
-                oauth2ResourceServer
-                    .jwt((jwt) ->
-                        jwt
-                            .jwkSetUri(jwkSetUri)
-                    )
-            );
+  @Bean
+  public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
+    http
+        .csrf(ServerHttpSecurity.CsrfSpec::disable)
+        .authorizeExchange(
+            authorizeExchangeSpec -> authorizeExchangeSpec.anyExchange()
+                .authenticated())
+        .oauth2ResourceServer(oauth2ResourceServer ->
+            oauth2ResourceServer
+                .jwt(jwt ->
+                    jwt
+                        .jwkSetUri(jwkSetUri)
+                )
+        );
 
-        return http.build();
-    }
+    return http.build();
+  }
 
 }

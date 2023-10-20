@@ -24,7 +24,8 @@
 //    }
 //
 //    public static void main(String[] args) {
-//        SpringApplication.from(UseradminApplication::main).with(TestUseradminApplication.class).run(args);
+//        SpringApplication.from(UseradminApplication::main)
+//            .with(TestUseradminApplication.class).run(args);
 //    }
 //
 //}
