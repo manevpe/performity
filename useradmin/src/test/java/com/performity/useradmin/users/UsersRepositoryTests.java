@@ -1,6 +1,7 @@
 package com.performity.useradmin.users;
 
 import com.performity.useradmin.UseradminApplication;
+import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.List;
 import org.assertj.core.api.Assertions;
@@ -64,15 +65,31 @@ class UsersRepositoryTests {
 
   @Test
   void usersRepository_Create_User_With_All_Fields() {
-    Assertions.assertThat(savedUser).usingRecursiveComparison().isEqualTo(user);
+    Assertions.assertThat(savedUser)
+        .usingRecursiveComparison()
+        .ignoringFields("id", "dateCreated", "dateUpdated")
+        .isEqualTo(user);
   }
 
   @Test
   void usersRepository_Create_User_With_Mandatory_Fields_Only() {
     User expectedDefaultUser = defaultUser;
     expectedDefaultUser.setVacationDays((0));
-    Assertions.assertThat(savedDefaultUser).usingRecursiveComparison()
+    Assertions.assertThat(savedDefaultUser)
+        .usingRecursiveComparison()
+        .ignoringFields("id", "dateCreated", "dateUpdated")
         .isEqualTo(expectedDefaultUser);
+  }
+
+  @Test
+  void usersRepository_Date_Created_and_Date_Updated_Are_Set() {
+    Assertions.assertThat(savedUser)
+        .extracting("dateCreated")
+        .isInstanceOfAny(Timestamp.class)
+        .isNotNull();
+    Assertions.assertThat(savedUser)
+        .extracting("dateUpdated")
+        .isNull();
   }
 
   @Test
@@ -83,13 +100,17 @@ class UsersRepositoryTests {
     Assertions.assertThat(allUsers)
         .usingRecursiveComparison()
         .ignoringCollectionOrder()
+        .ignoringFields("id", "dateCreated", "dateUpdated")
         .isEqualTo(Arrays.asList(user, expectedDefaultUser));
   }
 
   @Test
   void usersRepository_Find_By_Email() {
     User returnedUser = usersRepository.findByEmail(user.getEmail());
-    Assertions.assertThat(returnedUser).usingRecursiveComparison().isEqualTo(user);
+    Assertions.assertThat(returnedUser)
+        .usingRecursiveComparison()
+        .ignoringFields("id", "dateCreated", "dateUpdated")
+        .isEqualTo(user);
   }
 
   @Test
@@ -104,7 +125,16 @@ class UsersRepositoryTests {
     updatedUser.setVacationDays((25));
     usersRepository.save(updatedUser);
     User returnedUser = usersRepository.findByEmail(updatedUser.getEmail());
-    Assertions.assertThat(returnedUser).usingRecursiveComparison().isEqualTo(updatedUser);
+    Assertions.assertThat(returnedUser)
+        .usingRecursiveComparison()
+        .ignoringFields("id", "dateCreated", "dateUpdated")
+        .isEqualTo(updatedUser);
+    Assertions.assertThat(returnedUser)
+        .extracting("dateCreated")
+        .isEqualTo(savedUser.getDateCreated());
+    Assertions.assertThat(returnedUser)
+        .extracting("dateUpdated")
+        .isNotNull();
   }
 
   @Test
@@ -113,7 +143,8 @@ class UsersRepositoryTests {
     List<User> allUsers = usersRepository.findAll();
     Assertions.assertThat(allUsers)
         .usingRecursiveComparison()
+        .ignoringFields("id", "dateCreated", "dateUpdated")
         .ignoringCollectionOrder()
-        .isEqualTo(Arrays.asList(user));
+        .isEqualTo(List.of(user));
   }
 }

@@ -1,8 +1,14 @@
 package com.performity.useradmin.users;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Objects;
 import lombok.AllArgsConstructor;
@@ -11,10 +17,12 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.proxy.HibernateProxy;
 
 @Entity
 @Table(name = "users")
+@DynamicUpdate
 @Getter
 @Setter
 @RequiredArgsConstructor
@@ -23,12 +31,28 @@ import org.hibernate.proxy.HibernateProxy;
 @Builder
 public class User {
   @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private long id;
+  @Column(unique = true)
   private String email;
   private String firstName;
   private String lastName;
   private List<String> teams;
   @Builder.Default
   private float vacationDays = 0;
+
+  private Timestamp dateCreated;
+  private Timestamp dateUpdated;
+
+  @PrePersist
+  protected void onCreate() {
+    dateCreated = new Timestamp(System.currentTimeMillis());
+  }
+
+  @PreUpdate
+  protected void onUpdate() {
+    dateUpdated = new Timestamp(System.currentTimeMillis());
+  }
 
   // Clone constructor
   public User(User originalUser) {

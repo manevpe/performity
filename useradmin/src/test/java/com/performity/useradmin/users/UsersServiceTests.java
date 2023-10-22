@@ -6,6 +6,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.performity.useradmin.keycloak.KeycloakService;
+import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.List;
 import org.assertj.core.api.Assertions;
@@ -97,14 +98,13 @@ class UsersServiceTests {
     mockedUser.setLastName("NewLastName");
     mockedUser.setVacationDays((float) 5);
     mockedUser.setTeams(Arrays.asList("teamA", "teamB"));
+    mockedUser.setDateCreated(new Timestamp(System.currentTimeMillis()));
     when(usersRepository.findByEmail(user.getEmail())).thenReturn(user);
     when(usersRepository.save(Mockito.any(User.class))).thenReturn(mockedUser);
     User returnedUser = usersService.updateByEmail(user.getEmail(), mockedUser);
     Assertions.assertThat(returnedUser)
         .usingRecursiveComparison()
         .isEqualTo(mockedUser);
-    verify(usersRepository, times(0)).deleteByEmail(Mockito.any(String.class));
-    verify(keycloakService, times(0)).deleteUser(Mockito.any(String.class));
   }
 
   @Test
@@ -121,8 +121,17 @@ class UsersServiceTests {
     Assertions.assertThat(returnedUser)
         .usingRecursiveComparison()
         .isEqualTo(mockedUser);
-    verify(usersRepository, times(1)).deleteByEmail(Mockito.any(String.class));
-    verify(keycloakService, times(1)).deleteUser(Mockito.any(String.class));
+  }
+
+  @Test
+  void usersService_Update_User_New_Email_Duplicate_Error() {
+    User mockedUser = new User(user);
+    mockedUser.setEmail("duplicate@dundermifflin.com");
+    when(usersRepository.findByEmail(user.getEmail())).thenReturn(user);
+    when(usersRepository.findByEmail("duplicate@dundermifflin.com")).thenReturn(user);
+    assertThatThrownBy(() ->
+        usersService.updateByEmail(user.getEmail(), mockedUser)
+    ).isInstanceOf(UserExistsException.class);
   }
 
   @Test

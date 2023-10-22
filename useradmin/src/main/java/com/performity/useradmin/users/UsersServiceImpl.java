@@ -45,12 +45,15 @@ public class UsersServiceImpl implements UsersService {
   }
 
   public User updateByEmail(String email, User newUser) {
-    getUserDetails(email);
-    // When changing email, we need to first delete the old entry
-    // TODO - this is not ideal - what would be a better approach?
-    if (!email.equals(newUser.getEmail())) {
-      deleteByEmail(email);
+    User existingUser = getUserDetails(email);
+    if (existingUser == null) {
+      throw new UserNotFoundException();
     }
+    if (!email.equals(newUser.getEmail()) && findByEmail(newUser.getEmail()) != null) {
+      throw new UserExistsException();
+    }
+    newUser.setId(existingUser.getId());
+    newUser.setDateCreated(existingUser.getDateCreated());
     keycloakService.updateUser(email, newUser);
     return usersRepository.save(newUser);
   }

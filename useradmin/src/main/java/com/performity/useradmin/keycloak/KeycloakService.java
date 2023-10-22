@@ -17,9 +17,9 @@ public class KeycloakService {
 
   static Keycloak keycloak = null;
   @Autowired
-  static KeycloakConfig keycloakConfig;
+  KeycloakConfig keycloakConfig;
 
-  private static void buildInstance() {
+  private void buildInstance() {
     keycloak = KeycloakBuilder.builder()
         .serverUrl(keycloakConfig.getServerUrl())
         // TODO - allow user to select a particular domain
