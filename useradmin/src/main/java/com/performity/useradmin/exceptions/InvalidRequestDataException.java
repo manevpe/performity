@@ -1,10 +1,9 @@
-package com.performity.useradmin.utils;
+package com.performity.useradmin.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-// TODO - define a global error handler class with unified error messaging
-@ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Invalid request data.")  // 400
+@ResponseStatus(value = HttpStatus.BAD_REQUEST)
 public class InvalidRequestDataException extends RuntimeException {
   public InvalidRequestDataException(String errorMessage) {
     super(errorMessage);

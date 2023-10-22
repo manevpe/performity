@@ -2,9 +2,9 @@ package com.performity.useradmin.users;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.performity.useradmin.utils.AccessDeniedException;
+import com.performity.useradmin.exceptions.AccessDeniedException;
 import com.performity.useradmin.utils.AuthorizationHelper;
-import com.performity.useradmin.utils.JsonSchemaValidator;
+import com.performity.useradmin.validators.JsonSchemaValidator;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;

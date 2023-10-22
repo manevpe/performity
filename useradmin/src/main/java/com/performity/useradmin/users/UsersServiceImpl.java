@@ -1,6 +1,8 @@
 package com.performity.useradmin.users;
 
 import com.performity.useradmin.keycloak.KeycloakService;
+import com.performity.useradmin.users.exceptions.UserExistsException;
+import com.performity.useradmin.users.exceptions.UserNotFoundException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

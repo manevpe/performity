@@ -1,5 +1,6 @@
 package com.performity.useradmin.utils;
 
+import com.performity.useradmin.exceptions.AccessDeniedException;
 import java.util.Arrays;
 import org.springframework.stereotype.Component;
 

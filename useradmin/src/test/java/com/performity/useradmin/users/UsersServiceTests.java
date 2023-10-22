@@ -6,6 +6,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.performity.useradmin.keycloak.KeycloakService;
+import com.performity.useradmin.users.exceptions.UserExistsException;
+import com.performity.useradmin.users.exceptions.UserNotFoundException;
 import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.List;

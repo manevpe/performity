@@ -1,4 +1,4 @@
-package com.performity.useradmin.utils;
+package com.performity.useradmin.validators;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -8,6 +8,7 @@ import com.networknt.schema.JsonSchema;
 import com.networknt.schema.JsonSchemaFactory;
 import com.networknt.schema.SpecVersion;
 import com.networknt.schema.ValidationMessage;
+import com.performity.useradmin.exceptions.InvalidRequestDataException;
 import com.performity.useradmin.users.UsersController;
 import java.io.InputStream;
 import java.util.Set;

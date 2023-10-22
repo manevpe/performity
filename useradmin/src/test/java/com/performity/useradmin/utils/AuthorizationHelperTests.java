@@ -2,6 +2,7 @@ package com.performity.useradmin.utils;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.performity.useradmin.exceptions.AccessDeniedException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 

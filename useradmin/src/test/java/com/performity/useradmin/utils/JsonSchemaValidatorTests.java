@@ -4,7 +4,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.performity.useradmin.exceptions.InvalidRequestDataException;
 import com.performity.useradmin.users.User;
+import com.performity.useradmin.validators.JsonSchemaValidator;
 import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 

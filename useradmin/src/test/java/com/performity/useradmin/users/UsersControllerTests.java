@@ -10,9 +10,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.performity.useradmin.utils.AccessDeniedException;
+import com.performity.useradmin.exceptions.AccessDeniedException;
 import com.performity.useradmin.utils.AuthorizationHelper;
-import com.performity.useradmin.utils.JsonSchemaValidator;
+import com.performity.useradmin.validators.JsonSchemaValidator;
 import java.util.Arrays;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
