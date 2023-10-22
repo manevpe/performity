@@ -16,6 +16,9 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+/**
+ * @author Petar Manev - <a href="https://github.com/manevpe">GitHub</a>
+ */
 @SpringBootTest(
     classes = UseradminApplication.class,
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,

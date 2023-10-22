@@ -20,6 +20,9 @@ import lombok.ToString;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.proxy.HibernateProxy;
 
+/**
+ * @author Petar Manev - <a href="https://github.com/manevpe">GitHub</a>
+ */
 @Entity
 @Table(name = "users")
 @DynamicUpdate

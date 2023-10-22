@@ -18,6 +18,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author Petar Manev - <a href="https://github.com/manevpe">GitHub</a>
+ */
 @Component
 public class JwtUtil {
 

@@ -16,6 +16,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author Petar Manev - <a href="https://github.com/manevpe">GitHub</a>
+ */
 @Component
 public class JsonSchemaValidator {
   private static final Logger logger = LoggerFactory.getLogger(JsonSchemaValidator.class);

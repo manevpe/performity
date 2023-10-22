@@ -17,6 +17,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+/**
+ * @author Petar Manev - <a href="https://github.com/manevpe">GitHub</a>
+ */
 @RefreshScope
 @Component
 public class AuthenticationFilter implements GatewayFilter {

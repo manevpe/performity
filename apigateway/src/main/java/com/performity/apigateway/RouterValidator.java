@@ -5,6 +5,9 @@ import java.util.function.Predicate;
 import lombok.experimental.UtilityClass;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 
+/**
+ * @author Petar Manev - <a href="https://github.com/manevpe">GitHub</a>
+ */
 @UtilityClass
 public class RouterValidator {
 

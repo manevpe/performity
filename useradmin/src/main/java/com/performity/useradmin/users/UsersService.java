@@ -2,6 +2,9 @@ package com.performity.useradmin.users;
 
 import java.util.List;
 
+/**
+ * @author Petar Manev - <a href="https://github.com/manevpe">GitHub</a>
+ */
 public interface UsersService {
   List<User> allUsers();
 
