@@ -1,9 +1,6 @@
 package com.performity.apigateway;
 
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,12 +46,6 @@ public class AuthenticationFilter implements GatewayFilter {
       } catch (Exception e) {
         throw new JwtException(e.getMessage());
       }
-
-      try {
-        this.populateRequestWithHeaders(exchange, token);
-      } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-        throw new RuntimeException(e);
-      }
     }
     return chain.filter(exchange);
   }
@@ -73,18 +64,5 @@ public class AuthenticationFilter implements GatewayFilter {
 
   private boolean isAuthMissing(ServerHttpRequest request) {
     return !request.getHeaders().containsKey("Authorization");
-  }
-
-  private void populateRequestWithHeaders(ServerWebExchange exchange, String token)
-      throws NoSuchAlgorithmException, InvalidKeySpecException {
-    token = token.replace("Bearer ", "").trim();
-
-    Claims claims = jwtUtil.getAllClaimsFromToken(token);
-    exchange.getRequest().mutate()
-        .header("userEmail", claims.get("email").toString())
-        //TODO - use proper json mapper
-        .header("userRoles", claims.get("realm_access").toString()
-            .replace("{roles=[", "").replace("]}", ""))
-        .build();
   }
 }

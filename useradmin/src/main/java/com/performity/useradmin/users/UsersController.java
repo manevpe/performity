@@ -7,11 +7,11 @@ import com.performity.useradmin.utils.AuthorizationHelper;
 import com.performity.useradmin.validators.JsonSchemaValidator;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +32,11 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/useradmin/v1/users")
+@SecurityRequirement(name = "bearerAuth")
 public class UsersController {
 
-  private static final String USER_ROLES = "userRoles";
+  private static final String USER_ROLES = "user_roles";
+
   @Autowired
   private UsersService usersService;
   @Autowired
@@ -46,13 +48,6 @@ public class UsersController {
   @Operation(
       summary = "Get all users",
       description = "Returns a list of all users for the tenant.",
-      parameters = {
-          @Parameter(
-              name = "userRoles",
-              in = ParameterIn.HEADER,
-              example = "Admin"
-          )
-      },
       responses = @ApiResponse(
           content = @Content(
               mediaType = MediaType.APPLICATION_JSON_VALUE,
@@ -62,7 +57,7 @@ public class UsersController {
   )
   public ResponseEntity<List<User>> getAllUsers(HttpServletRequest request)
       throws AccessDeniedException {
-    authorizationHelper.checkAdminPermission(request.getHeader(USER_ROLES));
+    authorizationHelper.checkAdminPermission(request.getAttribute(USER_ROLES).toString());
     return new ResponseEntity<>(usersService.allUsers(), HttpStatus.OK);
   }
 
@@ -72,17 +67,7 @@ public class UsersController {
       summary = "Get User details",
       description = "Returns all the data for a particular user by email exact match.",
       parameters = {
-          @Parameter(name = "id", description = "The email of the user"),
-          @Parameter(
-              name = "userEmail",
-              in = ParameterIn.HEADER,
-              example = "admin@example.com"
-          ),
-          @Parameter(
-              name = "userRoles",
-              in = ParameterIn.HEADER,
-              example = "Admin"
-          )
+          @Parameter(name = "id", description = "The email of the user")
       },
       responses = {
           @ApiResponse(
@@ -103,8 +88,8 @@ public class UsersController {
                                              @PathVariable("id") String email)
       throws AccessDeniedException {
     // Allow user to read their own data, but only admins get read other users data.
-    if (!email.equals(request.getHeader("userEmail"))) {
-      authorizationHelper.checkAdminPermission(request.getHeader(USER_ROLES));
+    if (!email.equals(request.getAttribute("user_email").toString())) {
+      authorizationHelper.checkAdminPermission(request.getAttribute(USER_ROLES).toString());
     }
     return new ResponseEntity<>(usersService.getUserDetails(email), HttpStatus.OK);
   }
@@ -116,13 +101,6 @@ public class UsersController {
       requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
           content = @Content(schema = @Schema(implementation = User.class))
       ),
-      parameters = {
-          @Parameter(
-              name = "userRoles",
-              in = ParameterIn.HEADER,
-              example = "Admin"
-          )
-      },
       responses = {
           @ApiResponse(
               responseCode = "201",
@@ -140,7 +118,7 @@ public class UsersController {
   )
   public ResponseEntity<User> createUser(HttpServletRequest request, @RequestBody String payload)
       throws AccessDeniedException, JsonProcessingException {
-    authorizationHelper.checkAdminPermission(request.getHeader(USER_ROLES));
+    authorizationHelper.checkAdminPermission(request.getAttribute(USER_ROLES).toString());
     jsonSchemaValidator.validate("model/user.schema.json", payload);
     ObjectMapper objectMapper = new ObjectMapper();
     User newUser = objectMapper.readValue(payload, User.class);
@@ -152,12 +130,7 @@ public class UsersController {
       summary = "Update user",
       description = "Update a particular user. Replaces all existing data for the user.",
       parameters = {
-          @Parameter(name = "id", description = "The email of the user"),
-          @Parameter(
-              name = "userRoles",
-              in = ParameterIn.HEADER,
-              example = "Admin"
-          )
+          @Parameter(name = "id", description = "The email of the user")
       },
       requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
           content = @Content(schema = @Schema(implementation = User.class))
@@ -184,7 +157,7 @@ public class UsersController {
   public ResponseEntity<User> updateUser(HttpServletRequest request, @RequestBody String payload,
                                          @PathVariable("id") String email)
       throws AccessDeniedException, JsonProcessingException {
-    authorizationHelper.checkAdminPermission(request.getHeader(USER_ROLES));
+    authorizationHelper.checkAdminPermission(request.getAttribute(USER_ROLES).toString());
     jsonSchemaValidator.validate("model/user.schema.json", payload);
     ObjectMapper objectMapper = new ObjectMapper();
     User newUser = objectMapper.readValue(payload, User.class);
@@ -196,12 +169,7 @@ public class UsersController {
       summary = "Delete user",
       description = "Delete a particular user, by the email.",
       parameters = {
-          @Parameter(name = "id", description = "The email of the user"),
-          @Parameter(
-              name = "userRoles",
-              in = ParameterIn.HEADER,
-              example = "Admin"
-          )
+          @Parameter(name = "id", description = "The email of the user")
       },
       responses = {
           @ApiResponse(
@@ -217,7 +185,7 @@ public class UsersController {
   public ResponseEntity<HttpStatus> deleteUser(HttpServletRequest request,
                                                @PathVariable("id") String email)
       throws AccessDeniedException {
-    authorizationHelper.checkAdminPermission(request.getHeader(USER_ROLES));
+    authorizationHelper.checkAdminPermission(request.getAttribute(USER_ROLES).toString());
     usersService.deleteByEmail(email);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }

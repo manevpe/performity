@@ -70,25 +70,33 @@ class UsersControllerTests {
 
   @Test
   void usersController_Get_All_Users() throws Exception {
-    when(authorizationHelper.checkAdminPermission(null)).thenReturn(true);
+    when(authorizationHelper.checkAdminPermission("Admin")).thenReturn(true);
 
-    ResultActions response = mockMvc.perform(get("/useradmin/v1/users"));
+    ResultActions response = mockMvc.perform(
+        get("/useradmin/v1/users")
+            .requestAttr("user_roles", "Admin")
+    );
 
     response.andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
     verify(usersService, times(1)).allUsers();
-    verify(authorizationHelper, times(1)).checkAdminPermission(null);
+    verify(authorizationHelper, times(1)).checkAdminPermission("Admin");
   }
 
   @Test
   void usersController_Get_User_Details() throws Exception {
-    when(authorizationHelper.checkAdminPermission(null)).thenReturn(true);
+    when(authorizationHelper.checkAdminPermission("Admin")).thenReturn(true);
 
     ResultActions response =
-        mockMvc.perform(get("/useradmin/v1/users/michael.scott@dundermifflin.com"));
+        mockMvc.perform(
+            get("/useradmin/v1/users/michael.scott@dundermifflin.com")
+                .requestAttr("user_email", "admin@dundermifflin.com")
+                .requestAttr("user_roles", "Admin")
+        );
 
     response.andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
-    verify(usersService, times(1)).getUserDetails("michael.scott@dundermifflin.com");
-    verify(authorizationHelper, times(1)).checkAdminPermission(null);
+    verify(usersService, times(1))
+        .getUserDetails("michael.scott@dundermifflin.com");
+    verify(authorizationHelper, times(1)).checkAdminPermission("Admin");
   }
 
   @Test
@@ -97,7 +105,7 @@ class UsersControllerTests {
 
     ResultActions response = mockMvc.perform(
         get("/useradmin/v1/users/michael.scott@dundermifflin.com")
-            .header("userEmail", "michael.scott@dundermifflin.com")
+            .requestAttr("user_email", "michael.scott@dundermifflin.com")
     );
 
     response.andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
@@ -114,6 +122,7 @@ class UsersControllerTests {
     String payload = objectMapper.writeValueAsString(user);
     ResultActions response = mockMvc.perform(
         post("/useradmin/v1/users")
+            .requestAttr("user_roles", "Admin")
             .contentType(MediaType.APPLICATION_JSON)
             .content(payload)
     );
@@ -133,7 +142,7 @@ class UsersControllerTests {
         post("/useradmin/v1/users")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(user))
-            .header("userRoles", "RolesList")
+            .requestAttr("user_roles", "RolesList")
     );
 
     response.andExpect(MockMvcResultMatchers.status().is4xxClientError());
@@ -149,6 +158,7 @@ class UsersControllerTests {
     String payload = objectMapper.writeValueAsString(user);
     ResultActions response = mockMvc.perform(
         put("/useradmin/v1/users/michael.scott@dundermifflin.com")
+            .requestAttr("user_roles", "Admin")
             .contentType(MediaType.APPLICATION_JSON)
             .content(payload)
     );
@@ -164,7 +174,9 @@ class UsersControllerTests {
     when(authorizationHelper.checkAdminPermission(Mockito.any(String.class))).thenReturn(true);
 
     ResultActions response = mockMvc.perform(
-        delete("/useradmin/v1/users/michael.scott@dundermifflin.com"));
+        delete("/useradmin/v1/users/michael.scott@dundermifflin.com")
+            .requestAttr("user_roles", "Admin")
+    );
 
     response.andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
     verify(usersService, times(1)).deleteByEmail("michael.scott@dundermifflin.com");
