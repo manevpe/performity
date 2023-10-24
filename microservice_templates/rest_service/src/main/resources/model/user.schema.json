@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://www.performity.app/schemas/user.schema.json",
+  "title": "MyService User",
+  "description": "User model",
+  "type": "object",
+  "properties": {
+    "firstName": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1000,
+      "description": "First name of the user"
+    },
+    "lastName": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1000,
+      "description": "Last name of the user"
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "description": "Email of the user"
+    },
+    "teams": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "A list of teams, the user belongs to"
+    }
+  },
+  "required": [
+    "firstName",
+    "lastName",
+    "email"
+  ]
+}

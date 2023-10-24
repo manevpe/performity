@@ -12,7 +12,6 @@ group = 'com.performity'
 version = '0.0.1-SNAPSHOT'
 
 java {
-    //sourceCompatibility = '21'
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
     }
@@ -24,9 +23,6 @@ checkstyle {
     ignoreFailures = false
     maxWarnings = 0
 }
-
-//compileJava.options.fork = true
-//compileJava.options.forkOptions.executable = 'C:/Program Files/Java/jdk-17/bin/javac.exe'
 
 configurations {
     compileOnly {
@@ -43,7 +39,6 @@ ext {
 }
 
 dependencies {
-    // TODO - extract common versions into variable
     implementation 'org.springframework.boot:spring-boot-starter:3.1.+'
     implementation "org.springframework.boot:spring-boot-starter-log4j2:3.1.+"
     modules {
@@ -61,8 +56,6 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap:4.0.+'
     implementation 'org.keycloak:keycloak-admin-client:22.0.+'
     implementation 'org.jboss.resteasy:resteasy-client:6.2.+'
-    //implementation 'org.springframework.cloud:spring-cloud-starter-loadbalancer'
-    //implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation 'com.networknt:json-schema-validator:1.0.+'
     implementation 'org.springframework.boot:spring-boot-starter-actuator:3.1.+'
     implementation 'org.springframework.cloud:spring-cloud-starter-zipkin:2.2.+'
